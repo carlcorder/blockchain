@@ -7,29 +7,29 @@ const SHA256 = require('crypto-js/sha256');
 
 class Block {
 
-  constructor(index, data, previousHash = '') {
-    this.index = index;
-    this.timestamp = Date.now();
-    this.data = data.toString();
-    this.previousHash = previousHash;
-    this.hash = this.calculateHash();
-    this.nonce = 0;
-  }
-  
-  calculateHash() {
-      return SHA256(
-          `${this.index}${this.previousHash}${this.timestamp}${this.data}${this.nonce}`
-        ).toString();
-  }
-
-  mineBlock(difficulty) {
-    const zeros = '0'.repeat(difficulty);
-    while(this.hash.substring(0, difficulty) !== zeros) {
-        this.nonce++;
+    constructor(index, data, previousHash = '') {
+        this.index = index;
+        this.timestamp = Date.now();
+        this.data = data.toString();
+        this.previousHash = previousHash;
         this.hash = this.calculateHash();
+        this.nonce = 0;
     }
-    console.log(`Block mined : ${this.hash}`);
-  }
+
+    calculateHash() {
+        return SHA256(
+            `${this.index}${this.previousHash}${this.timestamp}${this.data}${this.nonce}`
+        ).toString();
+    }
+
+    mineBlock(difficulty) {
+        const zeros = '0'.repeat(difficulty);
+        while (this.hash.substring(0, difficulty) !== zeros) {
+            this.nonce++;
+            this.hash = this.calculateHash();
+        }
+        console.log(`Block mined : ${this.hash}`);
+    }
 
 }
 
@@ -52,11 +52,11 @@ class Blockchain {
     validateChain() {
         // TODO
         // 1) validate chain after every newBlock
-        for(let i = 1; i < this.chain.length; i++) {
+        for (let i = 1; i < this.chain.length; i++) {
             const currentBlock = this.chain[i];
             const previousBlock = this.chain[i - 1];
-            return (currentBlock.hash !== currentBlock.calculateHash() || 
-                    currentBlock.previousHash !== previousBlock.hash) ? false : true;
+            return (currentBlock.hash !== currentBlock.calculateHash() ||
+                currentBlock.previousHash !== previousBlock.hash) ? false : true;
         }
     }
 
